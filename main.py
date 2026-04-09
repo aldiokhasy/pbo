@@ -7,7 +7,7 @@ pygame.init()
 WIDTH = 500
 HEIGHT = 500
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Car Game - Day & Night Cycle')
+pygame.display.set_caption('Car Game')
 
 # WARNA-WARNA (RGB)
 COLORS = {
@@ -60,7 +60,6 @@ small_font = pygame.font.Font(pygame.font.get_default_font(), 12)
 
 # CLASS VEHICLE (KENDARAAN)
 class Vehicle(pygame.sprite.Sprite):
-    """Class dasar untuk semua kendaraan"""
 
     def __init__(self, image, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -76,10 +75,9 @@ class Vehicle(pygame.sprite.Sprite):
 
 
 class PlayerVehicle(Vehicle):
-    """Class khusus untuk mobil pemain"""
 
     def __init__(self, x, y):
-        player_image = pygame.image.load('images/car.png')
+        player_image = pygame.image.load('car.png')
         super().__init__(player_image, x, y)
 
 # MEMUAT SEMUA GAMBAR
@@ -94,16 +92,15 @@ player_group.add(player)
 enemy_images = []
 enemy_filenames = ['pickup_truck.png', 'semi_trailer.png', 'taxi.png', 'van.png']
 for filename in enemy_filenames:
-    img = pygame.image.load('images/' + filename)
+    img = pygame.image.load(filename)
     enemy_images.append(img)
 
 # Memuat gambar tabrakan
-crash_img = pygame.image.load('images/crash.png')
+crash_img = pygame.image.load('crash.png')
 crash_rect = crash_img.get_rect()
 
 # FUNGSI-FUNGSI BANTUAN
 def update_day_night_cycle():
-    """Update timer dan ganti mode siang/malam jika perlu"""
     global is_night_mode, cycle_timer
 
     if not game_over:
@@ -115,7 +112,6 @@ def update_day_night_cycle():
 
 
 def draw_grass():
-    """Gambar rumput (hijau saat siang, hitam saat malam)"""
     if is_night_mode and not game_over:
         screen.fill(COLORS['BLACK'])
     else:
@@ -123,14 +119,12 @@ def draw_grass():
 
 
 def draw_road():
-    """Gambar jalan dan marka"""
     pygame.draw.rect(screen, COLORS['GRAY'], road_rect)
     pygame.draw.rect(screen, COLORS['YELLOW'], left_edge_rect)
     pygame.draw.rect(screen, COLORS['YELLOW'], right_edge_rect)
 
 
 def draw_lane_markers():
-    """Gambar marka putus-putus di jalur"""
     global lane_marker_move_y
 
     lane_marker_move_y += game_speed * 2
@@ -145,7 +139,6 @@ def draw_lane_markers():
 
 
 def add_enemy_vehicle():
-    """Tambahkan mobil lawan secara acak"""
     if len(vehicle_group) < 2:
         can_add = True
         for vehicle in vehicle_group:
@@ -160,7 +153,6 @@ def add_enemy_vehicle():
 
 
 def move_enemy_vehicles():
-    """Gerakkan semua mobil lawan dan update score"""
     global player_score, game_speed
 
     for vehicle in vehicle_group:
@@ -175,7 +167,6 @@ def move_enemy_vehicles():
 
 
 def draw_night_effect():
-    """Gambar efek gelap saat mode malam"""
     if is_night_mode and not game_over:
         darkness = pygame.Surface((WIDTH, HEIGHT))
         darkness.set_alpha(150)
@@ -183,12 +174,11 @@ def draw_night_effect():
         screen.blit(darkness, (0, 0))
 
 def draw_mode_indicator():
-    """Tampilkan indikator mode siang/malam di layar"""
     if not game_over:
         if is_night_mode:
-            mode_text = small_font.render('🌙 NIGHT TIME', True, COLORS['YELLOW'])
+            mode_text = small_font.render('NIGHT TIME', True, COLORS['YELLOW'])
         else:
-            mode_text = small_font.render('☀️ DAY TIME', True, COLORS['WHITE'])
+            mode_text = small_font.render('DAY TIME', True, COLORS['WHITE'])
         mode_rect = mode_text.get_rect(center=(WIDTH / 2, 20))
         screen.blit(mode_text, mode_rect)
 
@@ -202,7 +192,6 @@ def draw_mode_indicator():
 
 
 def draw_score():
-    """Tampilkan skor di layar"""
     score_text = main_font.render(f'Score: {player_score}', True, COLORS['WHITE'])
     score_rect = score_text.get_rect()
     score_rect.center = (50, 400)
@@ -210,7 +199,6 @@ def draw_score():
 
 
 def handle_collision(event_key=None):
-    """Handle tabrakan dengan mobil lain"""
     global game_over
 
     for vehicle in vehicle_group:
@@ -233,7 +221,6 @@ def handle_collision(event_key=None):
 
 
 def reset_game():
-    """Reset semua variabel game ke awal"""
     global game_over, game_speed, player_score, is_night_mode, cycle_timer
 
     game_over = False
@@ -247,7 +234,6 @@ def reset_game():
 
 
 def draw_game_over():
-    """Tampilkan layar game over"""
     screen.blit(crash_img, crash_rect)
     pygame.draw.rect(screen, COLORS['RED'], (0, 50, WIDTH, 100))
 
@@ -259,7 +245,6 @@ def draw_game_over():
 
 
 def handle_game_over():
-    """Handle input saat game over (Y = main lagi, N = keluar)"""
     global game_over, running
 
     waiting = True
